@@ -1,65 +1,33 @@
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
-package cs4r.labs.oracle.mooc;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import acm.program.ConsoleProgram;
+import acm.util.RandomGenerator;
 
-/**
- * Class to generate a list of random words. Oracle JDK 8 MOOC Lesson2 homework
- * 
- * @author cs4r
- */
-public class RandomWords {
-	private final List<String> sourceWords;
-	private static final String WORD_REGEXP = "[- .:,]+";
+public class RandomWord extends ConsoleProgram {
 
-	/**
-	 * Constructor
-	 * 
-	 * @throws IOException
-	 *             If the source words file cannot be read
-	 */
-	public RandomWords() throws IOException {
-		try (BufferedReader reader = Files.newBufferedReader(Paths.get("words.txt"))) {
-			sourceWords = reader.lines().flatMap(line -> Stream.of(line.split(WORD_REGEXP)))
-					.collect(Collectors.toList());
-			System.out.println("Loaded " + sourceWords.size() + " words");
-		}
-	}
+    private static final int MIN_LETTERS = 3;
+    private static final int MAX_LETTERS = 8;
 
-	/**
-	 * Create a list of a given size containing random words
-	 *
-	 * @param listSize
-	 *            The size of the list to create
-	 * @return The created list
-	 */
-	public List<String> createList(int listSize) {
-		List<String> wordList = Collections.emptyList();
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            println(randomWord());
+        }
+    }
 
-		if (listSize > 0) {
-			Random rand = new Random(System.currentTimeMillis());
-			wordList = rand.ints(listSize, 0, sourceWords.size()).mapToObj(i -> sourceWords.get(i))
-					.collect(Collectors.toList());
-		}
+    private String randomWord() {
+        String word = "";
+        for (int i = 0; i < rand.nextInt(MIN_LETTERS, MAX_LETTERS); i++) {
+            word += randomChar();
+        }
+        return word;
+    }
 
-		return wordList;
-	}
+    private char randomChar() {
+        return (char) rand.nextInt('A', 'Z');
+    }
 
-	/**
-	 * Return the list of all source words, which cannot be modified
-	 *
-	 * @return The unmodifiable list of all source words
-	 */
-	public List<String> allWords() {
-		return Collections.unmodifiableList(sourceWords);
-	}
+    /* Create an instance variable for the random number generator */
+    private RandomGenerator rand = new RandomGenerator();
+
 }
